@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "model-drift-observatory"
+version = "0.1.0"
+description = "Deterministic comparison of supplied API observations"
+requires-python = ">=3.10"
+dependencies = []
+
+[project.scripts]
+mdo = "model_drift_observatory.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["model_drift_observatory*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

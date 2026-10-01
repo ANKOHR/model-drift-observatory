@@ -1,0 +1,21 @@
+{
+  "_comment": "SYNTHETIC hand-written five-pair example; no production measurements.",
+  "synthetic": true,
+  "records": [
+    {"id":"status", "api":"example", "synthetic":true,
+     "baseline":{"date":"2026-09-01","status":200,"response":"ok","fields":["answer"],"latency_ms":"100"},
+     "current":{"date":"2026-09-02","status":503,"response":"ok","fields":["answer"],"latency_ms":"100"}},
+    {"id":"response", "api":"example", "synthetic":true,
+     "baseline":{"date":"2026-09-01","status":200,"response":"ok","fields":["answer"],"latency_ms":"100"},
+     "current":{"date":"2026-09-02","status":200,"response":"changed","fields":["answer"],"latency_ms":"100"}},
+    {"id":"schema", "api":"example", "synthetic":true,
+     "baseline":{"date":"2026-09-01","status":200,"response":"ok","fields":["answer"],"latency_ms":"100"},
+     "current":{"date":"2026-09-02","status":200,"response":"ok","fields":["answer","version"],"latency_ms":"100"}},
+    {"id":"latency", "api":"example", "synthetic":true,
+     "baseline":{"date":"2026-09-01","status":200,"response":"ok","fields":["answer"],"latency_ms":"100"},
+     "current":{"date":"2026-09-02","status":200,"response":"ok","fields":["answer"],"latency_ms":"201"}},
+    {"id":"control", "api":"example", "synthetic":true,
+     "baseline":{"date":"2026-09-01","status":200,"response":"ok","fields":["answer"],"latency_ms":"100"},
+     "current":{"date":"2026-09-02","status":200,"response":"ok","fields":["answer"],"latency_ms":"100"}}
+  ]
+}
