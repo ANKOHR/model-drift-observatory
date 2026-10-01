@@ -1,0 +1,20 @@
+Model Drift Observatory build complete, 2026-10-01
+
+Tests: 45 passed in 2.57 seconds (python -m pytest -q).
+Local implementation commit: 817bf79026867336318b323b1da37cdf130b48cf
+This hash identifies the verified implementation; this completion note is committed separately.
+Branch: main.
+Installed CLI fixture/run/Markdown report demo: 1.0540087 seconds, measured locally.
+Ground truth: 200 synthetic paired records, 80 changed, 120 unchanged,
+20 changes per category, zero missed planted cases, zero false positives.
+
+Built a deterministic, CPU-only, local Python CLI with fixtures, run, report,
+compare, and validate commands. Its pure engine computes exact status, response,
+field-set, and latency changes from explicit paired observations. Labelled
+fixtures, independent expectations, a hand-written five-record example,
+provenance declarations and source hashes make reports auditable. Adversarial
+tests cover malformed inputs, schema violations, Unicode, duplicate IDs,
+decimal precision, determinism, and atomic write failures. README, lessons,
+local evidence, and the two-week real-use improvement hook are documented.
+The final verdict awaits real-use evidence; production accuracy and savings
+remain unmeasured. No network, model, or GPU calls were made. Not published.
