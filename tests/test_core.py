@@ -1,5 +1,6 @@
 from copy import deepcopy
 from datetime import date
+from decimal import Inexact, localcontext
 
 import pytest
 
@@ -77,6 +78,26 @@ def test_schema_drift_named():
     record = fixture_data()['records'][0]
     record['amount'] = -10
     with pytest.raises(SchemaError, match='amount'):
+        compare([record])
+
+
+def test_decimal_context_cannot_change_findings():
+    record = fixture_data()['records'][100]
+    record['current']['latency_ms'] = '200.000000000000000001'
+    expected = compare([record])
+    with localcontext() as context:
+        context.prec = 2
+        context.traps[Inexact] = True
+        assert compare([record]) == expected
+    assert expected['counts']['latency'] == 1
+    assert expected['findings'][0]['latency_delta_ms'] == '100.000000000000000001'
+
+
+@pytest.mark.parametrize('value', ['20260901', '2026-W36-2'])
+def test_noncanonical_dates_rejected(value):
+    record = fixture_data()['records'][0]
+    record['baseline']['date'] = value
+    with pytest.raises(SchemaError, match='baseline.date'):
         compare([record])
 
 

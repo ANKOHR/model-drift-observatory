@@ -81,7 +81,8 @@ def load_inputs(directory, as_of):
                 records.append(record)
         except SchemaError as exc:
             raise InputError(f'SchemaError: {path}: line 1 (JSON document), {exc}') from None
-        sources.append({'file': path.name, 'sha256': hashlib.sha256(raw).hexdigest(), 'synthetic': envelope['synthetic']})
+        sources.append({'file': path.name, 'sha256': hashlib.sha256(raw).hexdigest(),
+                        'synthetic': envelope['synthetic'], 'declaration': envelope['_comment']})
     return records, sources
 
 

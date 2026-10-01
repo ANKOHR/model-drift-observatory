@@ -1,7 +1,7 @@
 """Pure validation and comparison. No API calls or estimated figures."""
 
 from datetime import date
-from decimal import Decimal, InvalidOperation
+from decimal import Context, Decimal, InvalidOperation, localcontext
 
 
 class SchemaError(ValueError):
@@ -36,6 +36,13 @@ def number(value, location):
 def string(value, location, limit=100000):
     if not isinstance(value, str) or not value or len(value) > limit:
         raise SchemaError(f"{location}: expected nonempty string of at most {limit} characters")
+
+
+def latency_delta(before, after):
+    """Subtract accepted decimals exactly, independent of caller context."""
+    # Accepted inputs have at most 28 digits including fractional places.
+    with localcontext(Context(prec=40)):
+        return number(after, 'latency_ms') - number(before, 'latency_ms')
 
 
 def validate_record(record, as_of):
@@ -84,19 +91,20 @@ def compare(records, as_of=date(2026, 9, 30), latency_threshold_ms='100'):
         seen.add(record['id'])
         synthetic += int(record['synthetic'])
         before, after = record['baseline'], record['current']
+        delta = latency_delta(before['latency_ms'], after['latency_ms'])
         changes = []
         for category, changed in (
             ('status', before['status'] != after['status']),
             ('response', before['response'] != after['response']),
             ('schema', set(before['fields']) != set(after['fields'])),
-            ('latency', abs(number(after['latency_ms'], 'latency_ms') - number(before['latency_ms'], 'latency_ms')) > threshold),
+            ('latency', delta.copy_abs() > threshold),
         ):
             if changed:
                 counts[category] += 1
                 changes.append(category)
         if changes:
             findings.append({'id': record['id'], 'api': record['api'], 'changes': changes,
-                             'latency_delta_ms': str(number(after['latency_ms'], 'latency_ms') - number(before['latency_ms'], 'latency_ms')),
+                             'latency_delta_ms': str(delta),
                              'baseline': before, 'current': after})
     return {'as_of': as_of.isoformat(), 'latency_threshold_ms': str(threshold),
             'total_records': len(records), 'changed_records': len(findings),

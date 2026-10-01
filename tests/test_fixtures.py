@@ -15,6 +15,7 @@ def test_fixtures_labelled_synthetic(tmp_path):
     assert len(records) == 200
     assert all(r['synthetic'] is True for r in records)
     assert len(sources) == 1
+    assert sources[0]['declaration'].startswith('SYNTHETIC')
 
 
 def test_fixture_generation_is_deterministic():
